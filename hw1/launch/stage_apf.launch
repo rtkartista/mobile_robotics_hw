@@ -1,0 +1,32 @@
+<launch>
+    <!-- Motion in empty space -->
+	<node pkg="stage_ros" name="stage" type="stageros" args="$(find stage_osu)/config/empty.world" />
+    <!-- Motion in complex space -->
+    <!-- <node pkg="stage_ros" name="stage" type="stageros" args="$(find stage_osu)/config/simple.world" /> -->
+
+    <!-- Driving the robot with apf -->
+    <node pkg="hw1" name="apf" type="apf.py" output="screen">
+        <!-- Maximum robot speed in the body x direction -->
+        <param name="v_max" type="double" value="1"/>
+        <!-- Anglur range of laser scan reading considered for obstacle detection -->
+        <param name="max_angle" type="int" value="100"/>
+        <!-- Maximum stopping distance (along body x) -->
+        <param name="range_lim" type="double" value="0.5"/>
+        <!-- Sim update rate -->
+        <param name="sample_rate" type="int" value="10"/>
+        <!-- Maximum robot angular yaw speed in the body frame -->
+        <param name="w_max" type="double" value="0.1"/>
+        <!-- Goal x location -->
+        <param name="gx" type="double" value="0.2"/>
+        <!-- Goal y location -->
+        <param name="gy" type="double" value="-2"/>
+        <!-- Obstace buffer as safety -->
+        <param name="obs_sz" type="double" value="1"/>
+        <!-- Robot radius as a safety buffer -->
+        <param name="rr" type="double" value="0.5"/>
+        <!-- Control Parameters for x and yaw velocities -->
+        <param name="drive_scale" type="double" value="-0.001"/>
+        <param name="turn_scale" type="double" value="1"/>
+    </node>
+
+</launch>

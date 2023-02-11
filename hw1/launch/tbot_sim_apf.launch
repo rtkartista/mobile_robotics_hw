@@ -1,0 +1,60 @@
+<launch>
+
+    <remap from="scan" to="base_scan" />
+
+    <arg name="model" default="burger"/>
+    <arg name="x_pos" default="1.0"/>
+    <arg name="y_pos" default="0.3"/>
+    <arg name="z_pos" default="0.0"/>
+    
+    <!-- Motion in empty space -->
+    <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/empty.world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include> -->
+
+    <!-- Motion in complex space -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/turtlebot3_house.world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+
+    <!-- Driving the robot -->
+	<node pkg="hw1" name="apf" type="apf.py" output="screen">
+    <!-- Maximum robot speed in the body x direction -->
+        <param name="v_max" type="double" value="0.1"/>
+        <!-- Anglur range of laser scan reading considered for obstacle detection -->
+        <param name="max_angle" type="int" value="181"/>
+        <!-- Maximum stopping distance (along body x) -->
+        <param name="range_lim" type="double" value="2"/>
+        <!-- Sim update rate -->
+        <param name="sample_rate" type="int" value="1"/>
+        <!-- Maximum robot angular yaw speed in the body frame -->
+        <param name="w_max" type="double" value="0.1"/>
+        <!-- Goal x location -->
+        <param name="gx" type="double" value="5.0"/>
+        <!-- Goal y location -->
+        <param name="gy" type="double" value="-2.0"/>
+        <!-- Obstace buffer as safety -->
+        <param name="obs_sz" type="double" value="2"/>
+        <!-- Robot radius as a safety buffer -->
+        <param name="rr" type="double" value="1"/>
+        <!-- Control Parameters for x and yaw velocities -->
+        <param name="drive_scale" type="double" value="-0.0001"/>
+        <param name="turn_scale" type="double" value="0.01"/>
+    </node>
+
+
+</launch>
