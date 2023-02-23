@@ -169,7 +169,6 @@ class move:
         self.publisher.publish(t)
 
         # Print out a log message to the INFO channel to let us know it's working.
-        rospy.loginfo(f'Goal {self.goal}')
         rospy.loginfo(f'Published {t.linear.x, t.angular.z}')
 
 if __name__ == "__main__":

@@ -1,0 +1,7 @@
+<launch>
+    <!-- Motion in empty space -->
+	<node pkg="stage_ros" name="stage" type="stageros" args="$(find stage_osu)/config/empty.world" />
+    <!-- Motion in complex space -->
+    <!-- <node pkg="stage_ros" name="stage" type="stageros" args="$(find stage_osu)/config/simple.world" /> -->
+
+</launch>

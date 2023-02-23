@@ -1,0 +1,8 @@
+<launch>
+    <!-- Motion in stage space -->
+    <include file="$(find hw2)/launch/stage.launch" >
+
+    <!-- Occupany grid map generation -->
+    
+
+</launch>
