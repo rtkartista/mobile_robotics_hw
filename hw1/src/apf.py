@@ -138,7 +138,7 @@ class move:
         # velocity control command generation - open loop
         t_vel.linear.x = tot_f[0] * self.drive_scale
         t_vel.angular.z = np.arctan2(tot_f[1],tot_f[0]) * self.turn_scale
-
+        print(tot_f)
         # clipping velocity for safety
         if abs(t_vel.linear.x ) < self.min_linear:
             t_vel.linear.x  = 0

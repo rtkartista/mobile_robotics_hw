@@ -8,7 +8,6 @@ project(hw2)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  gazebo_ros
   geometry_msgs
   rospy
   sensor_msgs

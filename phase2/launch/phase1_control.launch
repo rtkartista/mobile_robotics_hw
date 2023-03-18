@@ -1,0 +1,22 @@
+<launch>
+  <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.5"/>
+    <arg name="z_pos" default="0.0"/>
+  
+  <!-- Include the robot's sim world -->
+    <include file="$(find project)/launch/world_tbot.launch"/>
+
+    <!-- Turtlebot3 physical model-->
+    <!-- <param name="tf_prefix" value="robot0_tf" /> -->
+    <include file="$(find project)/launch/single_tbot.launch">
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="z_pos" value="$(arg z_pos)" />
+    </include>
+
+<!-- Rviz node to look at the generated trajectory by the controller -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find project)/config/turtlebot3_fake.rviz"/>
+    
+  <!-- Including the controller -->
+  <include file="$(find tb3_control)/control.launch"/>
+</launch>

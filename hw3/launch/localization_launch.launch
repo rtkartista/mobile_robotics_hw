@@ -1,0 +1,7 @@
+<launch>
+    <!-- An EKF instance that fuses odometry and IMU data and outputs an odom-frame state estimate -->
+<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <rosparam command="load" file="$(find hw3)/params/ekf_template.yaml" />
+   </node> 
+
+</launch>

@@ -2,7 +2,7 @@
     <arg name="x_pos" default="0.0"/>
     <arg name="y_pos" default="0.5"/>
     <arg name="z_pos" default="0.0"/>
-    <arg name="open_rviz" default="true"/>
+    <arg name="open_rviz" default="false"/>
     
     <!-- Include the robot's sim world -->
     <include file="$(find project)/launch/world_tbot.launch"/>
@@ -26,8 +26,8 @@
     <group ns="robot1">
         <param name="tf_prefix" value="robot1_tf" />
         <include file="$(find project)/launch/single_tbot.launch" >
-            <arg name="x_pos" value="1" />
-            <arg name="y_pos" value="1" />
+            <arg name="x_pos" value="0.5" />
+            <arg name="y_pos" value="-0.5" />
             <arg name="z_pos" value="0" />
             <arg name="name" value="obs1" />
         </include>
@@ -36,7 +36,7 @@
         <!-- Maximum robot speed in the body x direction -->
             <param name="v_max" type="double" value="0.5"/>
             <!-- Anglur range of laser scan reading considered for obstacle detection -->
-            <param name="max_angle" type="int" value="2"/>
+            <param name="max_angle" type="int" value="300"/>
             <!-- Maximum stopping distance (along body x) -->
             <param name="range_lim" type="double" value="1"/>
             <!-- Sim update rate -->
@@ -46,8 +46,9 @@
 
     <!-- rviz -->
     <group if="$(arg open_rviz)"> 
+    <!-- RVIZ display for the main robot with BVC -->
+        <param name="tf_prefix" value="robot0_tf" />
+        <param name="robot_description" value="/robot0/robot_description" />
         <include file="$(find project)/launch/rviz1_tbot.launch"/>
     </group>
-    <!-- http://wiki.ros.org/voronoi_planner -->
-    <!-- http://wiki.ros.org/tuw_voronoi_graph -->
 </launch>

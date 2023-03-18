@@ -34,7 +34,7 @@
     <!-- Driving the robot -->
 	<node pkg="hw1" name="apf" type="apf.py" output="screen">
     <!-- Maximum robot speed in the body x direction -->
-        <param name="v_max" type="double" value="0.1"/>
+        <param name="v_max" type="double" value="0.5"/>
         <!-- Anglur range of laser scan reading considered for obstacle detection -->
         <param name="max_angle" type="int" value="181"/>
         <!-- Maximum stopping distance (along body x) -->
@@ -52,7 +52,7 @@
         <!-- Robot radius as a safety buffer -->
         <param name="rr" type="double" value="1"/>
         <!-- Control Parameters for x and yaw velocities -->
-        <param name="drive_scale" type="double" value="-0.0001"/>
+        <param name="drive_scale" type="double" value="-0.0005"/>
         <param name="turn_scale" type="double" value="0.01"/>
     </node>
 

@@ -1,0 +1,35 @@
+<launch>
+
+<!-- Argument to switch from sim to real hardware -->
+<arg name="use_stage" default="true" />
+<!-- Motion in stage space -->
+<group if="$(arg use_stage)">
+    <!-- TurtleBot3 -->
+    <include file="$(find hw3)/launch/turtlebot3_world.launch"/>
+    <remap from="/odom" to="/odometry/filtered" />
+
+</group>
+
+<!-- Bringup robot from the ssh terminal -->
+<remap from="/base_scan" to="/scan" />
+
+<!-- Occupany grid map generation -->
+<node pkg="hw3" name="mapping" type="mapping.py" output="screen">
+<!-- Maximum robot speed in the body x direction -->
+<param name="v_max" type="double" value="1"/>
+<!-- Sim sampling rate -->
+<param name="sample_rate" type="double" value="100"/>
+<!--  Map X and Y dimensions and each grid side length (m)-->
+<param name="map_y" type="double" value="16.0"/>
+<param name="map_x" type="double" value="16.0"/>
+<param name="res" type="double" value="0.05"/>
+</node>
+
+<!-- Teleop for robot motion around the map -->
+<include file="$(find turtlebot3_teleop)/launch/turtlebot3_teleop_key.launch"/>
+
+
+<!-- Launching the localization node for IMU and ODOM from robot_localization package -->
+<include file="$(find hw3)/launch/localization_launch.launch"/>
+
+</launch>

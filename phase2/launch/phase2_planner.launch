@@ -1,0 +1,33 @@
+<launch>
+    <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.5"/>
+    <arg name="z_pos" default="0.0"/>
+    <arg name="node_start_delay" default="1" />  
+    <!-- Include the robot's sim world -->
+    <include file="$(find phase2)/launch/world_tbot.launch"/>
+    <!-- Add map -->
+
+    <!-- Turtlebot3 physical model-->
+    <group ns="robot0">
+        <param name="tf_prefix" value="robot0_tf" />
+        <include file="$(find phase2)/launch/single_tbot.launch">
+            <arg name="x_pos" value="$(arg x_pos)" />
+            <arg name="y_pos" value="$(arg y_pos)" />
+            <arg name="z_pos" value="$(arg z_pos)" />
+            <arg name="name" value="r0" />
+        </include>
+        <!-- ControlNode -->
+        <node name="tb3_control_node" pkg="tb3_control" type="tb3_control_node" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' ">
+            <remap from="tb3_control_node/cmd_vel" to="cmd_vel"/>
+            <!-- <remap from="tb3_control_node/odom" to="odometry/filtered"/> -->
+            <remap from="tb3_control_node/setpoint" to="setpoint"/>
+
+        </node>
+        <!-- An EKF instance that fuses odometry and IMU data and outputs an odom-frame state estimate -->
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+            <rosparam command="load" file="$(find phase2)/params/ekf_template.yaml" />
+        </node> 
+        <!-- BVC node -->
+        <node pkg="phase2" type="phase2_node" name="phase2_node"/>
+    </group>
+</launch>

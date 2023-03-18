@@ -1,0 +1,32 @@
+<launch>
+    <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.5"/>
+    <arg name="z_pos" default="0.0"/>
+    
+    <!-- Include turtlebot teleop -->
+    <include file="$(find turtlebot3_teleop)/launch/turtlebot3_teleop_key.launch"/>
+    <!-- Include the robot's sim world -->
+    <include file="$(find project)/launch/world_tbot.launch"/>
+
+    <!-- Turtlebot3 physical model-->
+    <!-- <param name="tf_prefix" value="robot0_tf" /> -->
+    <include file="$(find project)/launch/single_tbot.launch">
+        <arg name="x_pos" value="$(arg x_pos)" />
+        <arg name="y_pos" value="$(arg y_pos)" />
+        <arg name="z_pos" value="$(arg z_pos)" />
+    </include>
+
+    <arg name="slam_methods" default="gmapping" doc="slam type [gmapping, cartographer, hector, karto, frontier_exploration]"/>
+    <arg name="model" default="burger"/>
+    <arg name="configuration_basename" default="turtlebot3_lds_2d.lua"/>
+    <!-- Include the slam gmapping node -->
+    <!-- SLAM: Gmapping, Cartographer, Hector, Karto, Frontier_exploration, RTAB-Map -->
+    <include file="$(find turtlebot3_slam)/launch/turtlebot3_$(arg slam_methods).launch">
+        <arg name="model" value="$(arg model)"/>
+        <arg name="configuration_basename" value="$(arg configuration_basename)"/>
+    </include>
+
+    <!-- Rviz node to look at the generated map -->
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find project)/config/slam_methods.rviz"/>
+</launch>

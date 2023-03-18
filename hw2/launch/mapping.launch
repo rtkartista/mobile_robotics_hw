@@ -1,8 +1,22 @@
 <launch>
-    <!-- Motion in stage space -->
-    <include file="$(find hw2)/launch/stage.launch" >
 
-    <!-- Occupany grid map generation -->
-    
+<!-- Motion in stage space -->
+<include file="$(find hw2)/launch/stage.launch" />
+
+<!-- Occupany grid map generation -->
+<node pkg="hw2" name="mapping" type="mapping.py" output="screen">
+<!-- Maximum robot speed in the body x direction -->
+<param name="v_max" type="double" value="0.51"/>
+<!-- Sim sampling rate -->
+<param name="sample_rate" type="double" value="100"/>
+<!--  Map X and Y dimensions and each grid side length (m)-->
+<param name="map_y" type="double" value="16.0"/>
+<param name="map_x" type="double" value="16.0"/>
+<param name="res" type="double" value="0.05"/>
+</node>
+
+<!-- Teleop for robot motion around the map -->
+<include file="$(find turtlebot3_teleop)/launch/turtlebot3_teleop_key.launch"/>
 
 </launch>
+

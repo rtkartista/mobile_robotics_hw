@@ -1,0 +1,54 @@
+<launch>
+    <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.5"/>
+    <arg name="z_pos" default="0.0"/>
+    <arg name="open_rviz" default="false"/>
+    
+    <!-- Include the robot's sim world -->
+    <include file="$(find project)/launch/world_tbot.launch"/>
+    <!-- Add map -->
+
+    <!-- Turtlebot3 physical model-->
+    <group ns="robot0">
+        <param name="tf_prefix" value="robot0_tf" />
+        <include file="$(find project)/launch/single_tbot.launch">
+            <arg name="x_pos" value="$(arg x_pos)" />
+            <arg name="y_pos" value="$(arg y_pos)" />
+            <arg name="z_pos" value="$(arg z_pos)" />
+            <arg name="name" value="r0" />
+            <!-- esimation -->
+            <!-- include obs detection -->
+            <!-- include bvc -->
+        </include>
+    </group>
+
+    <!-- Turtlebot3 obstacle 1 -->
+    <group ns="robot1">
+        <param name="tf_prefix" value="robot1_tf" />
+        <include file="$(find project)/launch/single_tbot.launch" >
+            <arg name="x_pos" value="0.5" />
+            <arg name="y_pos" value="-0.5" />
+            <arg name="z_pos" value="0" />
+            <arg name="name" value="obs1" />
+        </include>
+        <!-- simple move -->
+        <node pkg="project" name="simple_move" type="simple_move.py" output="screen">
+        <!-- Maximum robot speed in the body x direction -->
+            <param name="v_max" type="double" value="0.5"/>
+            <!-- Anglur range of laser scan reading considered for obstacle detection -->
+            <param name="max_angle" type="int" value="300"/>
+            <!-- Maximum stopping distance (along body x) -->
+            <param name="range_lim" type="double" value="1"/>
+            <!-- Sim update rate -->
+            <param name="sample_rate" type="int" value="10"/>
+        </node>
+    </group>
+
+    <!-- rviz -->
+    <group if="$(arg open_rviz)"> 
+    <!-- RVIZ display for the main robot with BVC -->
+        <param name="tf_prefix" value="robot0_tf" />
+        <param name="robot_description" value="/robot0/robot_description" />
+        <include file="$(find project)/launch/rviz1_tbot.launch"/>
+    </group>
+</launch>

@@ -29,6 +29,8 @@ class move:
 
         # laser readings
         self.laser = None
+        self.pose_data = None
+
         
     # start spinning the simple_move node     
     def start(self):
@@ -46,35 +48,15 @@ class move:
         ranges = np.array(self.laser.ranges)
 
         t = Twist()
-        # hardware has a lots of 0 in ranges
-        # removing zeros form the scan
-        for i in range(len(ranges)):
-            if ranges[i] == 0:
-                ranges[i] = 100
-        # get the distance of the closest obstacle in the front
-        r = min(ranges[-self.max_angle:-1])
-        r2 = min(ranges[0:self.max_angle])
-        print(r, r2)
-        if r2 < r:
-            r = r2
-    
-        if r >= self.range_lim: # is there a obstacle in frony of the robot
+        if ranges[0]>self.range_lim and ranges[self.max_angle]>self.range_lim and ranges[-self.max_angle]>self.range_lim: # Checks if there are obstacles in front
             t.linear.x = self.max_linear
-            t.linear.y = 0.0
-            t.linear.z = 0.0
-            t.angular.x = 0.0
-            t.angular.y = 0.0
             t.angular.z = 0.0
-
-        else: # stop infornt the obstacles
+        else:
             t.linear.x = 0.0
-            t.linear.y = 0.0
-            t.linear.z = 0.0
-            t.angular.x = 0.0
-            t.angular.y = 0.0
-            # t.angular.z = 0.0
-            # rotate to look for a new direction without abstacles
-            t.angular.z = 0.5
+            t.angular.z = self.max_linear
+            if ranges[0]>self.range_lim and ranges[self.max_angle]>self.range_lim and ranges[-self.max_angle]>self.range_lim: # Check for clearance after turning
+                t.linear.x = self.max_linear
+                t.angular.z = 0.0
 
         # publish the velocity to the sim
         self.publish_cmdvel(t)
@@ -90,7 +72,7 @@ class move:
 
     # /cmd_vel publisher
     def publish_cmdvel(self, t):
-        rospy.loginfo(f'Published {t.linear.x}')
+        # rospy.loginfo(f'Published {t.linear.x}')
         self.publisher.publish(t)
 
 
